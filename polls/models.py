@@ -1,5 +1,6 @@
 from django.db import models
 import uuid
+from django.core.validators import MinValueValidator, MaxValueValidator
 # Create your models here.
 
 class Users(models.Model):
@@ -13,5 +14,8 @@ class Users(models.Model):
 
 class game_review(models.Model):
     title = models.CharField(max_length = 30)
-    score = models.CharField()
+    score = models.IntegerField(validators= [
+        MinValueValidator(0),
+        MaxValueValidator(100)
+    ])
 
