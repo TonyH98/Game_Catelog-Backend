@@ -22,11 +22,12 @@ class game_review(models.Model):
 
 
 class users_games(models.Model):
+    user_id = models.ForeignKey(Users, on_delete=models.CASCADE)
     game_title = models.CharField()
     console = models.CharField()
     release_date = models.DateField()
     game_rating = models.CharField()
-    game_console = ArrayField(models.CharField())
+    game_console = ArrayField(models.CharField(), blank=True, default=list)
     game_dev = models.CharField()
     game_publisher = models.CharField()
     game_art = models.CharField()
