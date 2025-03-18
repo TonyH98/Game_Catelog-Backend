@@ -31,8 +31,8 @@ class GameReviewDetails(generics.RetrieveUpdateDestroyAPIView):
 
 class UsersGamesListCreate(generics.ListCreateAPIView):
     queryset = users_games.objects.all()
-    serializer_class = UsersGamesSerializer
+    serializer_class = UsersGamesSeralizer
 
 class UsersGamesDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = users_games.objects.all()
-    serializer_class = UsersGamesSerializer
+    serializer_class = UsersGamesSeralizer

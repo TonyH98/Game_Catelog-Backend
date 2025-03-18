@@ -13,12 +13,7 @@ class Users(models.Model):
     email = models.CharField(max_length = 50)
     account_date = models.DateField()
 
-class game_review(models.Model):
-    title = models.CharField(max_length = 30)
-    score = models.IntegerField(validators= [
-        MinValueValidator(0),
-        MaxValueValidator(100)
-    ])
+
 
 
 class users_games(models.Model):
@@ -33,3 +28,11 @@ class users_games(models.Model):
     game_art = models.CharField()
 
 
+
+class game_review(models.Model):
+    game_title = models.ForeignKey(users_games, on_delete=models.CASCADE)
+    users_id = models.ForeignKey(Users, on_delete=models.Case)
+    score = models.IntegerField(validators= [
+        MinValueValidator(0),
+        MaxValueValidator(100)
+    ])
