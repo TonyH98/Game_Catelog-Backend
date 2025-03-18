@@ -14,8 +14,6 @@ class Users(models.Model):
     account_date = models.DateField()
 
 
-
-
 class users_games(models.Model):
     user_id = models.ForeignKey(Users, on_delete=models.CASCADE)
     game_title = models.CharField()
@@ -31,7 +29,8 @@ class users_games(models.Model):
 
 class game_review(models.Model):
     game_title = models.ForeignKey(users_games, on_delete=models.CASCADE)
-    users_id = models.ForeignKey(Users, on_delete=models.Case)
+    users_id = models.ForeignKey(Users, on_delete=models.CASCADE)
+    review = models.TextField()
     score = models.IntegerField(validators= [
         MinValueValidator(0),
         MaxValueValidator(100)
