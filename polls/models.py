@@ -1,37 +1,42 @@
 from django.db import models
 import uuid
 from django.core.validators import MinValueValidator, MaxValueValidator
-from django.contrib.postgres.fields import ArrayField
-# Create your models here.
 
-class Users(models.Model):
-    id = models.UUIDField(primary_key=True, default = uuid.uuid4, editable=False)
-    username = models.CharField(max_length = 30)
-    firstname = models.CharField(max_length = 30)
-    lastname = models.CharField(max_length = 30)
-    password = models.CharField(max_length = 30)
-    email = models.CharField(max_length = 50)
-    account_date = models.DateField()
+class User(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    username = models.CharField(max_length=30, unique=True)
+    first_name = models.CharField(max_length=30)
+    last_name = models.CharField(max_length=30)
+    password = models.CharField(max_length=128)  # Consider using Django's built-in password hashing
+    email = models.EmailField(unique=True)  # Use EmailField instead of CharField
+    account_date = models.DateField(auto_now_add=True)
+
+    def __str__(self):
+        return self.username
 
 
-class users_games(models.Model):
-    user_id = models.ForeignKey(Users, on_delete=models.CASCADE)
-    game_title = models.CharField()
-    console = models.CharField()
+class UserGame(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="games")
+    game_title = models.CharField(max_length=255)
+    console = models.CharField(max_length=100)
     release_date = models.DateField()
-    game_rating = models.CharField()
-    game_console = ArrayField(models.CharField(), blank=True, default=list)
-    game_dev = models.CharField()
-    game_publisher = models.CharField()
-    game_art = models.CharField()
+    game_rating = models.CharField(max_length=10)
+    game_developer = models.CharField(max_length=255)
+    game_publisher = models.CharField(max_length=255)
+    game_art = models.URLField(blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.game_title} ({self.console}) - {self.user.username}"
 
 
-
-class game_review(models.Model):
-    game_title = models.ForeignKey(users_games, on_delete=models.CASCADE)
-    users_id = models.ForeignKey(Users, on_delete=models.CASCADE)
+class GameReview(models.Model):
+    game = models.ForeignKey(UserGame, on_delete=models.CASCADE, related_name="reviews")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="reviews")
     review = models.TextField()
-    score = models.IntegerField(validators= [
+    score = models.IntegerField(validators=[
         MinValueValidator(0),
         MaxValueValidator(100)
     ])
+
+    def __str__(self):
+        return f"Review by {self.user.username} on {self.game.game_title}"
