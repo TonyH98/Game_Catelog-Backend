@@ -2,7 +2,7 @@ from django.db import models
 import uuid
 from django.core.validators import MinValueValidator, MaxValueValidator
 
-class User(models.Model):
+class Users(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     username = models.CharField(max_length=30, unique=True)
     first_name = models.CharField(max_length=30)
@@ -16,7 +16,7 @@ class User(models.Model):
 
 
 class UserGame(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="games")
+    user = models.ForeignKey(Users, on_delete=models.CASCADE, related_name="games")
     game_title = models.CharField(max_length=255)
     console = models.CharField(max_length=100)
     release_date = models.DateField()
@@ -31,7 +31,7 @@ class UserGame(models.Model):
 
 class GameReview(models.Model):
     game = models.ForeignKey(UserGame, on_delete=models.CASCADE, related_name="reviews")
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="reviews")
+    user = models.ForeignKey(Users, on_delete=models.CASCADE, related_name="reviews")
     review = models.TextField()
     score = models.IntegerField(validators=[
         MinValueValidator(0),
